@@ -1,25 +1,41 @@
 import Layout from "../components/Layout"
+import ColecaoCliente from "../backend/db/ColecaoCliente"
 import Tabela from "../components/Tabela"
 import Cliente from "../core/Cliente"
+import ClienteRepositorio from "../core/ClienteRepositorio"
 import Botao from "../components/Botao"
 import Formulario from "../components/Formulario"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 
 export default function Home() {
 
-    //Responsavel por exibir e trocar estados de tabela.
+  const repo: ClienteRepositorio = new ColecaoCliente()
+  //Responsavel por exibir e trocar estados de tabela.
   const [cliente, setCliente] = useState<Cliente>(Cliente.vazio())
+  const [clientes, setClientes] = useState<Cliente[]>([])
 
   const [visivel, setVisivel] = useState<'tabela' | 'form'>('tabela')
 
-  const clientes = [
-    new Cliente('Ana', 34, '1'),
-    new Cliente('Bia', 45, '2'),
-    new Cliente('Carlos', 23, '3'),
-    new Cliente('Pedro', 28, '4'),
-    new Cliente('João', 32, '5'),
-  ]
+  // const clientes = [
+  //   new Cliente('Ana', 34, '1'),
+  //   new Cliente('Bia', 45, '2'),
+  //   new Cliente('Carlos', 23, '3'),
+  //   new Cliente('Pedro', 28, '4'),
+  //   new Cliente('João', 32, '5'),
+  // ]
+
+
+  useEffect(obterTodos, [])
+
+
+  function obterTodos() {
+    repo.obterTodos().then(clientes=>{
+      setClientes(clientes)
+      setVisivel("tabela")
+    })
+
+  }
 
   function novoCliente() {
     setCliente(Cliente.vazio())
@@ -29,13 +45,14 @@ export default function Home() {
     setCliente(cliente)
     setVisivel('form')
   }
-  function clienteExcluido(cliente: Cliente) {
-    console.log(`Excluir`, cliente.nome)
+  async function clienteExcluido(cliente: Cliente) {
+    await repo.excluir(cliente)
+    obterTodos()
   }
 
-  function salvarCliente(cliente: Cliente){
-    console.log(cliente)
-    setVisivel('tabela')
+  async function salvarCliente(cliente: Cliente) {
+    await repo.salvar(cliente)
+    obterTodos()
   }
 
 
@@ -48,10 +65,10 @@ export default function Home() {
         {visivel === 'tabela' ? (
           <>
             <div className="flex justify-end">
-              <Botao 
-                  onClick={novoCliente}
-                  cor="green" 
-                  className="mb-4">
+              <Botao
+                onClick={novoCliente}
+                cor="green"
+                className="mb-4">
                 Novo Cliente
               </Botao>
 
@@ -64,9 +81,9 @@ export default function Home() {
 
         ) : (
 
-          <Formulario cliente={cliente} 
-          clienteMudou={salvarCliente}
-          cancelado={() =>setVisivel('tabela')}
+          <Formulario cliente={cliente}
+            clienteMudou={salvarCliente}
+            cancelado={() => setVisivel('tabela')}
           />
 
         )}
