@@ -1,5 +1,5 @@
 ## Objetivo
-Este projeto trabalha com um CRUD integrado com o Firebase do Google. Para a criação da interface, foi utilizado o  [https://tailwindcss.com/](https://tailwindcss.co)
+Este projeto trabalha com um CRUD integrado com o Firebase do Google. Para a criação da interface, foi utilizado o  [TailWindCss](https://tailwindcss.com)
 
 
 ## Iniciando o projeto
