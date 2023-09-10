@@ -13,8 +13,8 @@ export default class Cliente{
     }
 
     //Precisa ter tres elementos dentro de cliente, pois a classe cliente exige isso
-    static vazio(){
-        return new Cliente('', 0, '0')
+    static vazio(): Cliente{
+        return new Cliente('', 0, '')
     }
 
     get id(){
